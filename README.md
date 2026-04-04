@@ -1,4 +1,4 @@
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -76,7 +76,7 @@
     <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50 shadow-md flex justify-between items-center no-print">
         <div>
             <h1 class="text-xl font-black text-red-500 tracking-tight">🚨 SOS MIQUÉIAS</h1>
-            <p id="cloud-status" class="text-[10px] font-bold text-yellow-500">🔄 Conectando à nuvem...</p>
+            <p id="cloud-status" class="text-[10px] font-bold text-yellow-500">🔄 A ligar à nuvem...</p>
         </div>
         <button id="btn-sound" onclick="window.toggleSound()" class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm font-bold text-gray-300">
             🔊 Som: ON
@@ -135,7 +135,7 @@
             </button>
 
             <button onclick="window.openRegistrationForm()" class="w-full bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white font-bold text-lg py-4 rounded-2xl shadow-lg transition-colors flex items-center justify-center gap-2">
-                <span>📝</span> Registrar Crise Manualmente
+                <span>📝</span> Registar Crise Manualmente
             </button>
 
             <div class="bg-slate-800 rounded-2xl p-5 border border-slate-700 mt-6 shadow-lg">
@@ -159,9 +159,9 @@
                     </div>
                 </div>
                 
-                <h3 class="font-bold text-slate-400 mb-3 text-sm uppercase tracking-wider">Últimos Registros (Global)</h3>
+                <h3 class="font-bold text-slate-400 mb-3 text-sm uppercase tracking-wider">Últimos Registos Globais</h3>
                 <div id="history-list" class="space-y-3">
-                    <p class="text-slate-500 text-sm text-center py-4">Sincronizando com a nuvem...</p>
+                    <p class="text-slate-500 text-sm text-center py-4">A sincronizar...</p>
                 </div>
             </div>
         </div>
@@ -181,7 +181,7 @@
                 <div class="mb-4">
                     <label class="flex items-center gap-3 cursor-pointer bg-slate-900 p-3 rounded-xl border border-slate-600">
                         <input type="checkbox" id="cb-select-all" onchange="window.toggleSelectAll(this)" class="w-6 h-6 accent-blue-500">
-                        <span class="font-bold text-white">Selecionar Todos os Registros</span>
+                        <span class="font-bold text-white">Selecionar Todos os Registos</span>
                     </label>
                 </div>
 
@@ -211,7 +211,7 @@
 
             <div class="bg-slate-800 rounded-2xl p-6 border-2 border-yellow-500 shadow-xl">
                 <ul class="space-y-5 text-xl font-bold text-white">
-                    <li class="flex items-center gap-4"><span class="text-3xl">🧘</span> Manter calma</li>
+                    <li class="flex items-center gap-4"><span class="text-3xl">🧘</span> Manter a calma</li>
                     <li class="flex items-center gap-4"><span class="text-3xl">🛑</span> Afastar pessoas</li>
                     <li class="flex items-center gap-4"><span class="text-3xl">🛌</span> Deitar de lado</li>
                     <li class="flex items-center gap-4"><span class="text-3xl">🛡️</span> Proteger a cabeça</li>
@@ -231,7 +231,7 @@
             </div>
 
             <button onclick="window.openRegistrationForm()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-black text-xl py-6 rounded-2xl shadow-xl mt-8 flex justify-center gap-2 transition-colors">
-                👉 REGISTRAR CRISE
+                👉 REGISTAR CRISE
             </button>
         </div>
 
@@ -253,7 +253,7 @@
             </div>
 
             <form id="crisis-form" onsubmit="window.saveAndSend(event)" class="space-y-6 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl">
-                <h2 class="text-2xl font-black text-white mb-4 border-b border-slate-700 pb-3">📝 Registro da Crise</h2>
+                <h2 class="text-2xl font-black text-white mb-4 border-b border-slate-700 pb-3">📝 Registo da Crise</h2>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -296,8 +296,8 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">O que estava fazendo antes?</label>
-                        <input type="text" id="f-before" placeholder="Ex: Assistindo TV, Brincando..." required>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">O que estava a fazer antes?</label>
+                        <input type="text" id="f-before" placeholder="Ex: A ver TV, A brincar..." required>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
@@ -309,7 +309,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Possível Infecção?</label>
+                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Possível Infeção?</label>
                             <input type="text" id="f-infection" placeholder="Ex: Garganta, gripe">
                         </div>
                     </div>
@@ -353,10 +353,10 @@
 
                 <div class="pt-4 flex flex-col gap-3">
                     <button type="submit" id="btn-submit-form" class="w-full bg-green-600 hover:bg-green-700 text-white font-black text-xl py-5 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-colors">
-                        👉 SALVAR E ENVIAR RESPONSÁVEL
+                        👉 GUARDAR E ENVIAR RESPONSÁVEL
                     </button>
                     <button type="button" onclick="window.cancelRegistration()" class="w-full bg-transparent border-2 border-slate-600 text-slate-300 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-colors">
-                        Cancelar Registro
+                        Cancelar Registo
                     </button>
                 </div>
             </form>
@@ -379,7 +379,7 @@
         <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center">
             <div class="text-4xl mb-4">❓</div>
             <h3 class="text-xl font-bold text-white mb-2">Atenção</h3>
-            <p class="text-slate-300 mb-6">Deseja cancelar este registro? Nada será salvo.</p>
+            <p class="text-slate-300 mb-6">Deseja cancelar este registo? Nada será guardado.</p>
             <div class="flex gap-3">
                 <button onclick="window.closeConfirmModal(false)" class="flex-1 bg-slate-600 hover:bg-slate-500 text-white font-bold py-3 rounded-xl transition-colors">Não</button>
                 <button onclick="window.closeConfirmModal(true)" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors">Sim, cancelar</button>
@@ -387,70 +387,71 @@
         </div>
     </div>
 
-    <!-- SCRIPT COM SUPORTE FIREBASE / NUVEM -->
+    <!-- SCRIPT COM SUPORTE FIREBASE AUTOMÁTICO -->
     <script type="module">
-        // Importações do Firebase Cloud (v11.6.1)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Variáveis de Ambiente e Configuração
+        // Variáveis automáticas da plataforma
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
         const RESPONSAVEL_PHONE = "5584987813129";
-
         let app, auth, db, currentUser;
-        window.globalCrises = []; // Armazena a memória de todos os dispositivos na nuvem
+        window.globalCrises = [];
 
-        // Estados Locais
         let isSilent = false;
         let audioCtx = null;
 
-        // ==========================================
-        // INICIALIZAÇÃO E CONEXÃO COM A NUVEM
-        // ==========================================
+        // INICIALIZAÇÃO DA NUVEM INTEGRADA
         async function initializeCloud() {
+            const statusIndicator = document.getElementById('cloud-status');
+            
+            // Se as configurações não existirem (abriu o ficheiro solto), usa memória do telemóvel
+            if (Object.keys(firebaseConfig).length === 0) {
+                statusIndicator.innerText = "⚠️ Modo Offline Local";
+                statusIndicator.classList.replace('text-yellow-500', 'text-yellow-500');
+                window.globalCrises = JSON.parse(localStorage.getItem('crises_miqueias_v2')) || [];
+                renderHistoryAndStats();
+                return;
+            }
+
             try {
-                if (Object.keys(firebaseConfig).length === 0) {
-                    throw new Error("Configuração ausente");
-                }
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                // Autenticação Silenciosa/Anônima (Regra Obrigatória)
+                // Conexão segura embutida
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
                     await signInAnonymously(auth);
                 }
 
-                // Observar Estado da Autenticação
                 onAuthStateChanged(auth, (user) => {
                     currentUser = user;
                     if (user) {
                         setupRealtimeListener();
                     } else {
-                        document.getElementById('cloud-status').innerText = "❌ Desconectado";
-                        document.getElementById('cloud-status').classList.replace('text-yellow-500', 'text-red-500');
+                        statusIndicator.innerText = "❌ Nuvem Desconectada";
+                        statusIndicator.classList.replace('text-yellow-500', 'text-red-500');
                     }
                 });
 
             } catch (error) {
                 console.error("Erro na nuvem:", error);
-                document.getElementById('cloud-status').innerText = "⚠️ Modo Local Offline";
-                document.getElementById('cloud-status').classList.replace('text-yellow-500', 'text-red-500');
-                // Fallback para localStorage caso falhe
+                statusIndicator.innerText = "⚠️ Modo Offline Local";
+                statusIndicator.classList.replace('text-yellow-500', 'text-yellow-500');
                 window.globalCrises = JSON.parse(localStorage.getItem('crises_miqueias_v2')) || [];
                 renderHistoryAndStats();
             }
         }
 
-        // Fica Escutando Qualquer Alteração Feita Em Qualquer Dispositivo
+        // ESCUTA A NUVEM EM TEMPO REAL
         function setupRealtimeListener() {
             if (!currentUser || !db) return;
             
-            // Regra Obrigatória de Caminho Público: artifacts/{appId}/public/data/{collectionName}
             const crisesRef = collection(db, 'artifacts', appId, 'public', 'data', 'crises_history');
             
             onSnapshot(crisesRef, (snapshot) => {
@@ -459,18 +460,17 @@
                     data.push({ id: doc.id, ...doc.data() });
                 });
                 
-                // Ordenar do mais novo para o mais antigo via JavaScript (Regra Firestore)
                 data.sort((a, b) => b.timestamp - a.timestamp);
-                
                 window.globalCrises = data;
                 
-                // Salvar um cache local por garantia
+                // Backup na memória local do telemóvel
                 localStorage.setItem('crises_miqueias_v2', JSON.stringify(data));
                 
-                document.getElementById('cloud-status').innerText = "🟢 Nuvem Sincronizada";
-                document.getElementById('cloud-status').classList.replace('text-yellow-500', 'text-green-400');
+                const statusIndicator = document.getElementById('cloud-status');
+                statusIndicator.innerText = "🟢 Nuvem Sincronizada";
+                statusIndicator.classList.replace('text-yellow-500', 'text-green-400');
                 
-                renderHistoryAndStats(); // Atualizar a tela
+                renderHistoryAndStats();
             }, (error) => {
                 console.error("Erro de sincronização:", error);
             });
@@ -480,9 +480,7 @@
             initializeCloud();
         });
 
-        // ==========================================
-        // LÓGICA DE INTERFACE E SALVAMENTO EXPORTADOS PARA WINDOW
-        // ==========================================
+        // FUNÇÕES DA INTERFACE
         window.switchView = function(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
@@ -505,9 +503,7 @@
 
         window.closeConfirmModal = function(confirm) {
             document.getElementById('confirm-modal').classList.add('hidden');
-            if (confirm) {
-                window.switchView('view-home');
-            }
+            if (confirm) window.switchView('view-home');
         }
 
         window.toggleSound = function() {
@@ -537,13 +533,11 @@
                 gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
                 oscillator.start();
                 oscillator.stop(audioCtx.currentTime + 0.3);
-            } catch (e) { console.log("Áudio bloqueado"); }
+            } catch (e) {}
         }
 
         window.triggerVibration = function(pattern) {
-            if ("vibrate" in navigator && !isSilent) {
-                navigator.vibrate(pattern);
-            }
+            if ("vibrate" in navigator && !isSilent) navigator.vibrate(pattern);
         }
 
         window.startPanicMode = function() {
@@ -557,13 +551,9 @@
 
         window.openRegistrationForm = function() {
             window.triggerVibration(100);
-            
             const now = new Date();
-            const localDate = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
-            const localTime = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-            
-            document.getElementById('f-date').value = localDate;
-            document.getElementById('f-time').value = localTime;
+            document.getElementById('f-date').value = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+            document.getElementById('f-time').value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
             
             document.getElementById('f-min').value = '';
             document.getElementById('f-sec').value = '';
@@ -580,13 +570,11 @@
             window.switchView('view-form');
         }
 
-        // ==========================================
-        // SALVAR NA NUVEM
-        // ==========================================
+        // GUARDAR DADOS
         window.saveAndSend = async function(e) {
             e.preventDefault();
             const btnSubmit = document.getElementById('btn-submit-form');
-            btnSubmit.innerText = "⏳ Salvando...";
+            btnSubmit.innerText = "⏳ A Guardar...";
             btnSubmit.disabled = true;
             
             const min = document.getElementById('f-min').value || 0;
@@ -594,7 +582,7 @@
             const timeStr = `${min}min ${sec}seg`;
 
             const dataToSave = {
-                timestamp: Date.now(), // Usado para ordenar
+                timestamp: Date.now(),
                 date: document.getElementById('f-date').value,
                 time: document.getElementById('f-time').value,
                 duration: timeStr,
@@ -613,39 +601,35 @@
                 try {
                     const crisesRef = collection(db, 'artifacts', appId, 'public', 'data', 'crises_history');
                     await addDoc(crisesRef, dataToSave);
-                    // Não é preciso atualizar a UI manualmente. O `onSnapshot` fará isso.
                 } catch(error) {
-                    console.error("Erro ao salvar:", error);
-                    window.showMessage("Erro de Conexão", "Houve um problema para salvar na nuvem. Verifique a internet.");
-                    btnSubmit.innerText = "👉 SALVAR E ENVIAR RESPONSÁVEL";
+                    console.error("Erro ao guardar na nuvem:", error);
+                    window.showMessage("Erro de Conexão", "Problema a guardar na nuvem. Verifique a internet.");
+                    btnSubmit.innerText = "👉 GUARDAR E ENVIAR RESPONSÁVEL";
                     btnSubmit.disabled = false;
                     return;
                 }
             } else {
-                window.showMessage("Nuvem Indisponível", "A conexão global não foi estabelecida.");
-                btnSubmit.innerText = "👉 SALVAR E ENVIAR RESPONSÁVEL";
-                btnSubmit.disabled = false;
-                return;
+                // Guarda apenas no aparelho se não houver conexão
+                dataToSave.id = Date.now().toString();
+                window.globalCrises.unshift(dataToSave);
+                localStorage.setItem('crises_miqueias_v2', JSON.stringify(window.globalCrises));
+                renderHistoryAndStats();
             }
 
-            btnSubmit.innerText = "👉 SALVAR E ENVIAR RESPONSÁVEL";
+            btnSubmit.innerText = "👉 GUARDAR E ENVIAR RESPONSÁVEL";
             btnSubmit.disabled = false;
             window.switchView('view-home');
 
-            // Gerar Link do WhatsApp
             const dateBR = dataToSave.date.split('-').reverse().join('/');
-            const msg = `Crise registrada — Miquéias Braga\nData: ${dateBR}\nHora: ${dataToSave.time}\nTempo: ${dataToSave.duration}\nTipo: ${dataToSave.type}\nAntes da crise: ${dataToSave.before}\nFebre: ${dataToSave.fever}\nInfecção: ${dataToSave.infection}\nAlimentação: ${dataToSave.food}\nSinais vitais:\nPA: ${dataToSave.pa}\nSpO2: ${dataToSave.spo2}${dataToSave.spo2 !== 'Não aferido' ? '%' : ''}\nBPM: ${dataToSave.bpm}\nObservações: ${dataToSave.notes}`;
+            const msg = `Crise registada — Miquéias Braga\nData: ${dateBR}\nHora: ${dataToSave.time}\nTempo: ${dataToSave.duration}\nTipo: ${dataToSave.type}\nAntes da crise: ${dataToSave.before}\nFebre: ${dataToSave.fever}\nInfeção: ${dataToSave.infection}\nAlimentação: ${dataToSave.food}\nSinais vitais:\nPA: ${dataToSave.pa}\nSpO2: ${dataToSave.spo2}${dataToSave.spo2 !== 'Não aferido' ? '%' : ''}\nBPM: ${dataToSave.bpm}\nObservações: ${dataToSave.notes}`;
 
             const url = `https://wa.me/${RESPONSAVEL_PHONE}?text=${encodeURIComponent(msg)}`;
             window.open(url, '_blank');
         }
 
-        // ==========================================
-        // RENDERIZAÇÃO DA TELA (HOME E STATUS)
-        // ==========================================
+        // RENDERIZAR ESTATÍSTICAS E LISTA
         function renderHistoryAndStats() {
             const history = window.globalCrises;
-            
             const now = new Date();
             const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
             const currentYear = String(now.getFullYear());
@@ -667,11 +651,11 @@
 
             const listContainer = document.getElementById('history-list');
             if (history.length === 0) {
-                listContainer.innerHTML = '<p class="text-slate-500 text-sm text-center py-4">Nenhum registro encontrado na nuvem.</p>';
+                listContainer.innerHTML = '<p class="text-slate-500 text-sm text-center py-4">Nenhum registo encontrado.</p>';
                 return;
             }
 
-            listContainer.innerHTML = history.slice(0, 10).map(item => { // Mostra os 10 últimos
+            listContainer.innerHTML = history.slice(0, 10).map(item => {
                 const dateBR = item.date.split('-').reverse().join('/');
                 return `
                 <div class="bg-slate-900 p-4 rounded-xl border-l-4 border-slate-600 shadow-sm flex flex-col gap-1">
@@ -685,15 +669,13 @@
             }).join('');
         }
 
-        // ==========================================
-        // SISTEMA DE IMPRESSÃO DA NUVEM
-        // ==========================================
+        // SISTEMA DE IMPRESSÃO
         window.openPrintView = function() {
             const history = window.globalCrises;
             const listContainer = document.getElementById('print-selection-list');
             
             if (history.length === 0) {
-                listContainer.innerHTML = '<p class="text-slate-500 text-center py-6">Nenhum registro disponível para impressão.</p>';
+                listContainer.innerHTML = '<p class="text-slate-500 text-center py-6">Nenhum registo disponível para impressão.</p>';
             } else {
                 listContainer.innerHTML = history.map(item => {
                     const dateBR = item.date.split('-').reverse().join('/');
@@ -723,7 +705,7 @@
         window.executePrint = function() {
             const selectedCheckboxes = document.querySelectorAll('.print-cb:checked');
             if (selectedCheckboxes.length === 0) {
-                window.showMessage("Nenhum item selecionado", "Por favor, selecione pelo menos um registro para poder gerar o relatório de impressão.");
+                window.showMessage("Nenhum item selecionado", "Por favor, selecione pelo menos um registo para poder gerar o relatório de impressão.");
                 return;
             }
 
@@ -736,12 +718,12 @@
                 const dateBR = data.date.split('-').reverse().join('/');
                 return `
                 <div class="print-record">
-                    <h3>Registro: ${dateBR} às ${data.time}</h3>
+                    <h3>Registo: ${dateBR} às ${data.time}</h3>
                     <p><strong>Tipo de Crise:</strong> ${data.type}</p>
                     <p><strong>Duração:</strong> ${data.duration}</p>
-                    <p><strong>O que estava fazendo:</strong> ${data.before}</p>
+                    <p><strong>O que estava a fazer:</strong> ${data.before}</p>
                     <p><strong>Apresentou Febre?</strong> ${data.fever}</p>
-                    <p><strong>Possível Infecção:</strong> ${data.infection}</p>
+                    <p><strong>Possível Infeção:</strong> ${data.infection}</p>
                     <p><strong>Alimentação Recente:</strong> ${data.food}</p>
                     <p><strong>Sinais Vitais Pós-Crise:</strong> PA: ${data.pa} | SpO2: ${data.spo2}${data.spo2 !== 'Não aferido' ? '%' : ''} | BPM: ${data.bpm}</p>
                     <p><strong>Observações Extras:</strong> ${data.notes}</p>
@@ -754,5 +736,3 @@
     </script>
 </body>
 </html>
-
-
