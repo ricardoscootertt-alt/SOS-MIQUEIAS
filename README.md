@@ -159,7 +159,7 @@
                     </div>
                 </div>
                 
-                <h3 class="font-bold text-slate-400 mb-3 text-sm uppercase tracking-wider">Últimos Registos</h3>
+                <h3 class="font-bold text-slate-400 mb-3 text-sm uppercase tracking-wider">Últimos Registos Globais</h3>
                 <div id="history-list" class="space-y-3">
                     <p class="text-slate-500 text-sm text-center py-4">A sincronizar...</p>
                 </div>
@@ -387,58 +387,48 @@
         </div>
     </div>
 
-    <!-- SCRIPT COM SUPORTE FIREBASE AUTOMÁTICO -->
+    <!-- SCRIPT FIREBASE DO SEU PROJETO -->
     <script type="module">
+        // Importações da Nuvem (SDKs do Firebase)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Variáveis automáticas da plataforma (Nuvem Embutida)
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // ==========================================
+        // AS SUAS CHAVES DO FIREBASE
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjlHZj5BzwthZNA6x8lMvjYN10CVUEpmM",
+            authDomain: "sos-miqueias.firebaseapp.com",
+            projectId: "sos-miqueias",
+            storageBucket: "sos-miqueias.firebasestorage.app",
+            messagingSenderId: "473998594922",
+            appId: "1:473998594922:web:68ca046fcaf459da610b13",
+            measurementId: "G-L74MGHC2JP"
+        };
 
         const RESPONSAVEL_PHONE = "5584987813129";
-        let app, auth, db, currentUser;
+        
+        let app, analytics, auth, db, currentUser;
         window.globalCrises = [];
 
         let isSilent = false;
         let audioCtx = null;
-        let hasShownOfflineWarning = false;
 
-        // INICIALIZAÇÃO DA NUVEM INTEGRADA
+        // INICIALIZAÇÃO E LIGAÇÃO À SUA NUVEM
         async function initializeCloud() {
             const statusIndicator = document.getElementById('cloud-status');
             
-            // Verificação: O ficheiro foi retirado da plataforma de IA?
-            if (Object.keys(firebaseConfig).length === 0) {
-                statusIndicator.innerText = "⚠️ Modo Local (Sem Nuvem)";
-                statusIndicator.classList.replace('text-yellow-500', 'text-yellow-500');
-                window.globalCrises = JSON.parse(localStorage.getItem('crises_miqueias_v2')) || [];
-                renderHistoryAndStats();
-                
-                // Mostrar aviso a explicar porquê
-                if(!hasShownOfflineWarning) {
-                    window.showMessage(
-                        "Informação sobre a Nuvem", 
-                        "Como abriu o ficheiro fora da nossa plataforma original, ele não tem um servidor público partilhado para se conectar.\n\nA aplicação continuará a funcionar a 100% gravando na memória deste dispositivo e enviando os dados para o WhatsApp normalmente."
-                    );
-                    document.getElementById('modal-icon').innerText = "ℹ️";
-                    hasShownOfflineWarning = true;
-                }
-                return;
-            }
-
             try {
+                // Inicializa o Firebase com as suas chaves
                 app = initializeApp(firebaseConfig);
+                analytics = getAnalytics(app);
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                // Conexão segura embutida (Aqui dentro funciona com a Nuvem da IA)
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                // Entra de forma anónima (necessário para ler/escrever na base de dados)
+                await signInAnonymously(auth);
 
                 onAuthStateChanged(auth, (user) => {
                     currentUser = user;
@@ -452,18 +442,21 @@
 
             } catch (error) {
                 console.error("Erro na nuvem:", error);
-                statusIndicator.innerText = "⚠️ Modo Local Offline";
+                statusIndicator.innerText = "⚠️ Erro: Modo Offline";
                 statusIndicator.classList.replace('text-yellow-500', 'text-yellow-500');
+                
+                // Fallback para memória local se a internet falhar
                 window.globalCrises = JSON.parse(localStorage.getItem('crises_miqueias_v2')) || [];
                 renderHistoryAndStats();
             }
         }
 
-        // ESCUTA A NUVEM EM TEMPO REAL
+        // ESCUTA A SUA NUVEM EM TEMPO REAL
         function setupRealtimeListener() {
             if (!currentUser || !db) return;
             
-            const crisesRef = collection(db, 'artifacts', appId, 'public', 'data', 'crises_history');
+            // Pasta no seu banco de dados
+            const crisesRef = collection(db, 'crises_history');
             
             onSnapshot(crisesRef, (snapshot) => {
                 const data = [];
@@ -471,10 +464,11 @@
                     data.push({ id: doc.id, ...doc.data() });
                 });
                 
+                // Ordenar por data (mais recente primeiro)
                 data.sort((a, b) => b.timestamp - a.timestamp);
                 window.globalCrises = data;
                 
-                // Backup na memória local do telemóvel
+                // Backup na memória local do telemóvel para funcionar offline
                 localStorage.setItem('crises_miqueias_v2', JSON.stringify(data));
                 
                 const statusIndicator = document.getElementById('cloud-status');
@@ -485,6 +479,7 @@
                 renderHistoryAndStats();
             }, (error) => {
                 console.error("Erro de sincronização:", error);
+                // Se der erro de permissão, significa que tem de configurar as regras de segurança no Firebase Console.
             });
         }
 
@@ -492,7 +487,9 @@
             initializeCloud();
         });
 
-        // FUNÇÕES DA INTERFACE (Disponíveis em qualquer dispositivo)
+        // ==========================================
+        // FUNÇÕES DA INTERFACE
+        // ==========================================
         window.switchView = function(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
@@ -507,7 +504,6 @@
 
         window.closeModal = function() {
             document.getElementById('custom-modal').classList.add('hidden');
-            document.getElementById('modal-icon').innerText = "⚠️"; // Repor ícone padrão
         }
 
         window.cancelRegistration = function() {
@@ -583,7 +579,9 @@
             window.switchView('view-form');
         }
 
-        // GUARDAR DADOS (Offline ou Nuvem da IA)
+        // ==========================================
+        // GUARDAR DADOS NA SUA NUVEM
+        // ==========================================
         window.saveAndSend = async function(e) {
             e.preventDefault();
             const btnSubmit = document.getElementById('btn-submit-form');
@@ -610,20 +608,19 @@
                 notes: document.getElementById('f-notes').value || 'Nenhuma'
             };
 
-            // Se existir ligação à Nuvem da nossa IA...
             if (currentUser && db) {
                 try {
-                    const crisesRef = collection(db, 'artifacts', appId, 'public', 'data', 'crises_history');
+                    const crisesRef = collection(db, 'crises_history');
                     await addDoc(crisesRef, dataToSave);
                 } catch(error) {
                     console.error("Erro ao guardar na nuvem:", error);
-                    window.showMessage("Erro de Conexão", "Problema a guardar na nuvem. Verifique a internet.");
+                    window.showMessage("Erro de Permissão ou Conexão", "Não foi possível guardar na nuvem. Verifique a internet ou as Regras de Segurança no painel do Firebase.");
                     btnSubmit.innerText = "👉 GUARDAR E ENVIAR RESPONSÁVEL";
                     btnSubmit.disabled = false;
                     return;
                 }
             } else {
-                // Se o ficheiro foi descarregado para uso offline
+                // Guarda offline se a net falhar
                 dataToSave.id = Date.now().toString();
                 window.globalCrises.unshift(dataToSave);
                 localStorage.setItem('crises_miqueias_v2', JSON.stringify(window.globalCrises));
@@ -641,7 +638,9 @@
             window.open(url, '_blank');
         }
 
+        // ==========================================
         // RENDERIZAR ESTATÍSTICAS E LISTA
+        // ==========================================
         function renderHistoryAndStats() {
             const history = window.globalCrises;
             const now = new Date();
@@ -683,7 +682,9 @@
             }).join('');
         }
 
+        // ==========================================
         // SISTEMA DE IMPRESSÃO
+        // ==========================================
         window.openPrintView = function() {
             const history = window.globalCrises;
             const listContainer = document.getElementById('print-selection-list');
@@ -693,7 +694,7 @@
             } else {
                 listContainer.innerHTML = history.map(item => {
                     const dateBR = item.date.split('-').reverse().join('/');
-                    const uniqueId = item.id || item.timestamp; // Suporte a Nuvem e Offline
+                    const uniqueId = item.id || item.timestamp; 
                     return `
                     <label class="flex items-start gap-4 cursor-pointer bg-slate-700 hover:bg-slate-600 p-4 rounded-xl border border-slate-600 transition-colors">
                         <input type="checkbox" class="print-cb w-6 h-6 mt-1 accent-blue-500" value="${uniqueId}">
@@ -754,5 +755,3 @@
     </script>
 </body>
 </html>
-
-
