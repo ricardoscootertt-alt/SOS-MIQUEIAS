@@ -74,13 +74,20 @@
 
     <!-- CABEÇALHO -->
     <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50 shadow-md flex justify-between items-center no-print">
-        <div>
-            <h1 class="text-xl font-black text-red-500 tracking-tight">🚨 SOS MIQUÉIAS</h1>
-            <p id="cloud-status" class="text-[10px] font-bold text-yellow-500">🔄 A ligar à nuvem...</p>
+        <div class="flex items-center gap-3">
+            <div>
+                <h1 class="text-xl font-black text-red-500 tracking-tight">🚨 SOS MIQUÉIAS</h1>
+                <p id="cloud-status" class="text-[10px] font-bold text-blue-400">📊 Banco de Dados Local Ativo</p>
+            </div>
         </div>
-        <button id="btn-sound" onclick="window.toggleSound()" class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm font-bold text-gray-300">
-            🔊 Som: ON
-        </button>
+        <div class="flex gap-2">
+            <button onclick="window.openSettings()" class="p-2 bg-slate-800 border border-slate-700 rounded-lg text-lg">
+                ⚙️
+            </button>
+            <button id="btn-sound" onclick="window.toggleSound()" class="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm font-bold text-gray-300">
+                🔊
+            </button>
+        </div>
     </header>
 
     <main class="flex-grow max-w-md mx-auto w-full p-4 no-print">
@@ -90,7 +97,7 @@
         <!-- ========================================== -->
         <div id="view-home" class="view active space-y-6">
             
-            <div class="bg-slate-800 rounded-2xl p-5 border-l-4 border-blue-500 shadow-lg">
+            <div class="bg-slate-800 rounded-2xl p-5 border-l-4 border-blue-500 shadow-lg relative">
                 <h2 class="text-xl font-black text-white mb-3">MIQUÉIAS BRAGA DOMINGOS</h2>
                 <div class="space-y-2 text-sm font-medium text-slate-300">
                     <p class="flex items-center gap-2"><span>🧩</span> TEA Grau Leve</p>
@@ -99,22 +106,24 @@
                 </div>
             </div>
 
+            <!-- PAINEL DE MEDICAÇÃO (Dinâmico) -->
             <div class="bg-slate-800 rounded-2xl p-5 border border-slate-700 shadow-lg">
-                <h3 class="font-bold text-yellow-500 mb-3 flex items-center gap-2"><span>💊</span> Medicação e Suplementos</h3>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-yellow-500 flex items-center gap-2"><span>💊</span> Medicação Atual</h3>
+                </div>
+                
                 <div class="space-y-3 text-sm text-slate-300">
                     <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                        <p class="text-white font-bold">Levetiracetam 500mg</p>
-                        <p class="text-xs text-yellow-400">Uso: 21:00</p>
+                        <p id="ui-med-principal" class="text-white font-bold whitespace-pre-line">Levetiracetam 500mg (21:00)</p>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
                             <p class="text-xs text-slate-400 mb-1">Manhã</p>
-                            <p class="text-white font-semibold text-sm">PEA</p>
-                            <p class="text-white font-semibold text-sm">L-Teanina 200mg</p>
+                            <p id="ui-med-manha" class="text-white font-semibold text-sm whitespace-pre-line">PEA\nL-Teanina 200mg</p>
                         </div>
                         <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
                             <p class="text-xs text-slate-400 mb-1">Noite</p>
-                            <p class="text-white font-semibold text-sm">Melatonina 41mg</p>
+                            <p id="ui-med-noite" class="text-white font-semibold text-sm whitespace-pre-line">Melatonina 41mg</p>
                         </div>
                     </div>
                 </div>
@@ -143,9 +152,14 @@
                     <h3 class="font-bold text-slate-400 text-sm uppercase tracking-wider">
                         <span>📊 Resumo do Mês</span>
                     </h3>
-                    <button onclick="window.openPrintView()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded flex items-center gap-1 transition-colors">
-                        <span>🖨️</span> Imprimir
-                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="window.syncGoogleSheets()" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2 px-3 rounded flex items-center gap-1">
+                            <span>🔄</span> Sync
+                        </button>
+                        <button onclick="window.openPrintView()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded flex items-center gap-1">
+                            <span>🖨️</span> Imprimir
+                        </button>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-5">
@@ -159,16 +173,90 @@
                     </div>
                 </div>
                 
-                <h3 class="font-bold text-slate-400 mb-3 text-sm uppercase tracking-wider">Últimos Registos Globais</h3>
+                <h3 class="font-bold text-slate-400 mb-3 text-sm uppercase tracking-wider">Últimos Registos</h3>
                 <div id="history-list" class="space-y-3">
-                    <p class="text-slate-500 text-sm text-center py-4">A sincronizar...</p>
+                    <p class="text-slate-500 text-sm text-center py-4">A carregar...</p>
                 </div>
             </div>
         </div>
 
         <!-- ========================================== -->
-        <!-- VIEW: SELEÇÃO PARA IMPRESSÃO               -->
+        <!-- VIEW: CONFIGURAÇÕES E MEDICAÇÃO            -->
         <!-- ========================================== -->
+        <div id="view-settings" class="view space-y-4">
+            <div class="bg-slate-800 rounded-2xl p-5 border border-slate-700 shadow-xl">
+                <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
+                    <h2 class="text-xl font-black text-white flex items-center gap-2">
+                        <span>⚙️</span> Configurações
+                    </h2>
+                    <button onclick="window.switchView('view-home')" class="text-slate-400 hover:text-white font-bold">Voltar</button>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Config de Medicações -->
+                    <div>
+                        <h3 class="text-yellow-500 font-bold mb-3">💊 Editar Medicações e Suplementos</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Medicação Principal (Geral)</label>
+                                <textarea id="cfg-med-principal" rows="2" class="text-sm"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Suplementação da Manhã</label>
+                                <textarea id="cfg-med-manha" rows="2" class="text-sm"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Suplementação da Noite</label>
+                                <textarea id="cfg-med-noite" rows="2" class="text-sm"></textarea>
+                            </div>
+                            <button onclick="window.saveMedications()" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 rounded-xl transition-colors">
+                                Guardar Alterações Médicas
+                            </button>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-700">
+
+                    <!-- Config de Banco de Dados Google Sheets -->
+                    <div>
+                        <h3 class="text-green-500 font-bold mb-3">📊 Banco de Dados (Google Planilhas)</h3>
+                        <p class="text-xs text-slate-400 mb-3">Insira o link (URL) do Google Apps Script para sincronizar na sua Planilha automaticamente.</p>
+                        <input type="text" id="cfg-gs-url" placeholder="https://script.google.com/macros/s/.../exec" class="text-sm mb-3">
+                        <button onclick="window.saveDatabaseConfig()" class="w-full bg-green-700 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors">
+                            Conectar Planilha
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW: LOGIN ADMINISTRADOR                  -->
+        <!-- ========================================== -->
+        <div id="view-login" class="view space-y-4">
+            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl mt-10">
+                <h2 class="text-2xl font-black text-white text-center mb-2">🔐 Acesso Restrito</h2>
+                <p class="text-slate-400 text-sm text-center mb-6">Esta área requer credenciais maternas para alterar configurações ou excluir dados.</p>
+                
+                <form onsubmit="window.handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Email Mãe</label>
+                        <input type="email" id="login-email" required placeholder="sosmiqueias@gmail.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Senha</label>
+                        <input type="password" id="login-pass" required placeholder="••••••••">
+                    </div>
+                    <div class="pt-2 flex gap-3">
+                        <button type="button" onclick="window.switchView('view-home')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-colors">Cancelar</button>
+                        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors">Entrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- AS OUTRAS VIEWS (Imprimir, Pânico, Formulário) CONTINUAM IGUAIS -->
+        <!-- VIEW: SELEÇÃO PARA IMPRESSÃO -->
         <div id="view-print" class="view space-y-4">
             <div class="bg-slate-800 rounded-2xl p-5 border border-slate-700 shadow-xl">
                 <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-4">
@@ -177,18 +265,13 @@
                     </h2>
                     <button onclick="window.switchView('view-home')" class="text-slate-400 hover:text-white font-bold">Voltar</button>
                 </div>
-
                 <div class="mb-4">
                     <label class="flex items-center gap-3 cursor-pointer bg-slate-900 p-3 rounded-xl border border-slate-600">
                         <input type="checkbox" id="cb-select-all" onchange="window.toggleSelectAll(this)" class="w-6 h-6 accent-blue-500">
                         <span class="font-bold text-white">Selecionar Todos os Registos</span>
                     </label>
                 </div>
-
-                <div id="print-selection-list" class="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
-                    <!-- Preenchido via JS com checkboxes -->
-                </div>
-
+                <div id="print-selection-list" class="space-y-3 max-h-[50vh] overflow-y-auto pr-2"></div>
                 <div class="mt-6 pt-4 border-t border-slate-700">
                     <button onclick="window.executePrint()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black text-lg py-4 rounded-2xl shadow-lg transition-colors flex justify-center gap-2">
                         👉 GERAR RELATÓRIO
@@ -197,9 +280,7 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- VIEW 2: MODO PÂNICO (SIMPLIFICADO)         -->
-        <!-- ========================================== -->
+        <!-- VIEW 2: MODO PÂNICO -->
         <div id="view-panic" class="view space-y-4">
             <div class="bg-red-600 rounded-2xl p-6 text-center shadow-2xl">
                 <h2 class="text-3xl font-black text-white uppercase tracking-wider mb-2">Modo Emergência</h2>
@@ -208,7 +289,6 @@
                     <p class="text-sm text-white">⚠️ Se a crise passar de 5 minutos, acione socorro médico imediatamente.</p>
                 </div>
             </div>
-
             <div class="bg-slate-800 rounded-2xl p-6 border-2 border-yellow-500 shadow-xl">
                 <ul class="space-y-5 text-xl font-bold text-white">
                     <li class="flex items-center gap-4"><span class="text-3xl">🧘</span> Manter a calma</li>
@@ -217,7 +297,6 @@
                     <li class="flex items-center gap-4"><span class="text-3xl">🛡️</span> Proteger a cabeça</li>
                 </ul>
             </div>
-
             <div class="bg-slate-900 rounded-2xl p-6 border-2 border-red-500 shadow-xl space-y-4">
                 <div class="flex items-center gap-3 text-red-500 font-black text-xl">
                     <span class="text-3xl">🚫</span> NÃO colocar nada na boca
@@ -229,15 +308,12 @@
                     <span class="text-3xl">🚫</span> NÃO dar líquidos
                 </div>
             </div>
-
             <button onclick="window.openRegistrationForm()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-black text-xl py-6 rounded-2xl shadow-xl mt-8 flex justify-center gap-2 transition-colors">
                 👉 REGISTAR CRISE
             </button>
         </div>
 
-        <!-- ========================================== -->
-        <!-- VIEW 3: FORMULÁRIO PÓS-CRISE               -->
-        <!-- ========================================== -->
+        <!-- VIEW 3: FORMULÁRIO PÓS-CRISE -->
         <div id="view-form" class="view space-y-6">
             <div class="bg-yellow-900/40 border border-yellow-600 rounded-2xl p-5 shadow-lg">
                 <h3 class="font-black text-yellow-500 text-lg mb-3 flex items-center gap-2"><span>⚠️</span> ORIENTAÇÃO PÓS-CRISE</h3>
@@ -246,10 +322,6 @@
                     <li>• Não oferecer nada via oral.</li>
                     <li>• Aguardar recuperação completa.</li>
                 </ul>
-                <div class="mt-4 p-3 bg-slate-900 rounded-xl border border-slate-700">
-                    <p class="text-sm font-bold text-blue-400">💡 OBSERVAÇÃO:</p>
-                    <p class="text-xs text-slate-300 mt-1">Em caso de febre ou dor, agir apenas conforme orientação do responsável.</p>
-                </div>
             </div>
 
             <form id="crisis-form" onsubmit="window.saveAndSend(event)" class="space-y-6 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl">
@@ -353,7 +425,7 @@
 
                 <div class="pt-4 flex flex-col gap-3">
                     <button type="submit" id="btn-submit-form" class="w-full bg-green-600 hover:bg-green-700 text-white font-black text-xl py-5 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-colors">
-                        👉 GUARDAR E ENVIAR RESPONSÁVEL
+                        👉 GUARDAR REGISTO E ENVIAR
                     </button>
                     <button type="button" onclick="window.cancelRegistration()" class="w-full bg-transparent border-2 border-slate-600 text-slate-300 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-colors">
                         Cancelar Registo
@@ -364,7 +436,7 @@
 
     </main>
 
-    <!-- CAIXA DE MENSAGEM -->
+    <!-- MODAL DE MENSAGENS E ALERTAS -->
     <div id="custom-modal" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 no-print">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center">
             <div class="text-4xl mb-4" id="modal-icon">⚠️</div>
@@ -374,122 +446,171 @@
         </div>
     </div>
     
-    <!-- MODAL DE CONFIRMAÇÃO -->
+    <!-- MODAL DE CONFIRMAÇÃO (CANCELAR/APAGAR) -->
     <div id="confirm-modal" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 no-print">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center">
-            <div class="text-4xl mb-4">❓</div>
-            <h3 class="text-xl font-bold text-white mb-2">Atenção</h3>
-            <p class="text-slate-300 mb-6">Deseja cancelar este registo? Nada será guardado.</p>
+            <div class="text-4xl mb-4" id="confirm-icon">❓</div>
+            <h3 class="text-xl font-bold text-white mb-2" id="confirm-title">Atenção</h3>
+            <p class="text-slate-300 mb-6" id="confirm-text">Deseja cancelar este registo? Nada será guardado.</p>
             <div class="flex gap-3">
                 <button onclick="window.closeConfirmModal(false)" class="flex-1 bg-slate-600 hover:bg-slate-500 text-white font-bold py-3 rounded-xl transition-colors">Não</button>
-                <button onclick="window.closeConfirmModal(true)" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors">Sim, cancelar</button>
+                <button id="btn-confirm-yes" onclick="window.closeConfirmModal(true)" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors">Sim</button>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPT FIREBASE DO SEU PROJETO -->
-    <script type="module">
-        // Importações da Nuvem (SDKs do Firebase)
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // ==========================================
-        // AS SUAS CHAVES DO FIREBASE
-        // ==========================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyBjlHZj5BzwthZNA6x8lMvjYN10CVUEpmM",
-            authDomain: "sos-miqueias.firebaseapp.com",
-            projectId: "sos-miqueias",
-            storageBucket: "sos-miqueias.firebasestorage.app",
-            messagingSenderId: "473998594922",
-            appId: "1:473998594922:web:68ca046fcaf459da610b13",
-            measurementId: "G-L74MGHC2JP"
-        };
-
+    <!-- SCRIPT (100% INDEPENDENTE E LOCAL + INTEGRAÇÃO PLANILHA) -->
+    <script>
+        // ESTADO GLOBAL
         const RESPONSAVEL_PHONE = "5584987813129";
+        const ADMIN_EMAIL = "sosmiqueias@gmail.com";
+        const ADMIN_PASS = "sosmiqueiastt1";
         
-        let app, analytics, auth, db, currentUser;
-        window.globalCrises = [];
-
         let isSilent = false;
         let audioCtx = null;
+        let isAuthenticated = false;
+        let actionAfterLogin = null;
+        let itemToDelete = null;
 
-        // INICIALIZAÇÃO E LIGAÇÃO À SUA NUVEM
-        async function initializeCloud() {
-            const statusIndicator = document.getElementById('cloud-status');
+        // BANCO DE DADOS LOCAL E CONFIGURAÇÕES
+        window.globalCrises = JSON.parse(localStorage.getItem('miqueias_crises_db')) || [];
+        
+        const defaultMeds = {
+            principal: "Levetiracetam 500mg\nUso: 21:00",
+            manha: "PEA\nL-Teanina 200mg",
+            noite: "Melatonina 41mg"
+        };
+
+        // INICIALIZAÇÃO
+        document.addEventListener("DOMContentLoaded", () => {
+            loadMedications();
+            renderHistoryAndStats();
             
-            try {
-                // Inicializa o Firebase com as suas chaves
-                app = initializeApp(firebaseConfig);
-                analytics = getAnalytics(app);
-                auth = getAuth(app);
-                db = getFirestore(app);
+            // Pré-preencher config Google Sheets se existir
+            const gsUrl = localStorage.getItem('miqueias_gs_url') || '';
+            document.getElementById('cfg-gs-url').value = gsUrl;
+            
+            if(gsUrl) {
+                document.getElementById('cloud-status').innerText = "✅ Google Planilhas Conectado";
+                document.getElementById('cloud-status').classList.replace('text-blue-400', 'text-green-400');
+            }
+        });
 
-                // Entra de forma anónima (necessário para ler/escrever na base de dados)
-                await signInAnonymously(auth);
+        // -----------------------------------------
+        // GERENCIAMENTO DE MEDICAÇÕES E CONFIG
+        // -----------------------------------------
+        function loadMedications() {
+            const savedMeds = JSON.parse(localStorage.getItem('miqueias_meds_config')) || defaultMeds;
+            
+            // Atualizar UI da Home
+            document.getElementById('ui-med-principal').innerText = savedMeds.principal;
+            document.getElementById('ui-med-manha').innerText = savedMeds.manha;
+            document.getElementById('ui-med-noite').innerText = savedMeds.noite;
 
-                onAuthStateChanged(auth, (user) => {
-                    currentUser = user;
-                    if (user) {
-                        setupRealtimeListener();
-                    } else {
-                        statusIndicator.innerText = "❌ Nuvem Desconectada";
-                        statusIndicator.classList.replace('text-yellow-500', 'text-red-500');
-                    }
-                });
+            // Preencher campos de edição nas configurações
+            document.getElementById('cfg-med-principal').value = savedMeds.principal;
+            document.getElementById('cfg-med-manha').value = savedMeds.manha;
+            document.getElementById('cfg-med-noite').value = savedMeds.noite;
+        }
 
-            } catch (error) {
-                console.error("Erro na nuvem:", error);
-                statusIndicator.innerText = "⚠️ Erro: Modo Offline";
-                statusIndicator.classList.replace('text-yellow-500', 'text-yellow-500');
-                
-                // Fallback para memória local se a internet falhar
-                window.globalCrises = JSON.parse(localStorage.getItem('crises_miqueias_v2')) || [];
-                renderHistoryAndStats();
+        window.saveMedications = function() {
+            const newMeds = {
+                principal: document.getElementById('cfg-med-principal').value,
+                manha: document.getElementById('cfg-med-manha').value,
+                noite: document.getElementById('cfg-med-noite').value
+            };
+            localStorage.setItem('miqueias_meds_config', JSON.stringify(newMeds));
+            loadMedications();
+            window.showMessage("Sucesso", "As medicações foram atualizadas na memória da plataforma.");
+            document.getElementById('modal-icon').innerText = "✅";
+        }
+
+        window.saveDatabaseConfig = function() {
+            const url = document.getElementById('cfg-gs-url').value.trim();
+            if(url && !url.startsWith("https://script.google.com/")) {
+                window.showMessage("Erro", "A URL inserida não parece ser um link válido do Google Apps Script.");
+                return;
+            }
+            localStorage.setItem('miqueias_gs_url', url);
+            window.showMessage("Sucesso", "Configuração de Banco de Dados guardada com sucesso.");
+            document.getElementById('modal-icon').innerText = "✅";
+            if(url) {
+                document.getElementById('cloud-status').innerText = "✅ Google Planilhas Conectado";
+                document.getElementById('cloud-status').classList.replace('text-blue-400', 'text-green-400');
+            } else {
+                document.getElementById('cloud-status').innerText = "📊 Banco de Dados Local Ativo";
+                document.getElementById('cloud-status').className = "text-[10px] font-bold text-blue-400";
             }
         }
 
-        // ESCUTA A SUA NUVEM EM TEMPO REAL
-        function setupRealtimeListener() {
-            if (!currentUser || !db) return;
-            
-            // Pasta no seu banco de dados
-            const crisesRef = collection(db, 'crises_history');
-            
-            onSnapshot(crisesRef, (snapshot) => {
-                const data = [];
-                snapshot.forEach(doc => {
-                    data.push({ id: doc.id, ...doc.data() });
+        // -----------------------------------------
+        // INTEGRAÇÃO COM GOOGLE PLANILHAS (API)
+        // -----------------------------------------
+        async function sendToGoogleSheets(action, payload) {
+            const gsUrl = localStorage.getItem('miqueias_gs_url');
+            if (!gsUrl) return; // Trabalha apenas offline se não configurado
+
+            try {
+                // Fetch sem CORS stricto para Apps Script
+                await fetch(gsUrl, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: action, data: payload })
                 });
-                
-                // Ordenar por data (mais recente primeiro)
-                data.sort((a, b) => b.timestamp - a.timestamp);
-                window.globalCrises = data;
-                
-                // Backup na memória local do telemóvel para funcionar offline
-                localStorage.setItem('crises_miqueias_v2', JSON.stringify(data));
-                
-                const statusIndicator = document.getElementById('cloud-status');
-                statusIndicator.innerText = "🟢 Nuvem Sincronizada";
-                statusIndicator.classList.remove('text-yellow-500', 'text-red-500');
-                statusIndicator.classList.add('text-green-400');
-                
-                renderHistoryAndStats();
-            }, (error) => {
-                console.error("Erro de sincronização:", error);
-                // Se der erro de permissão, significa que tem de configurar as regras de segurança no Firebase Console.
-            });
+                console.log("Planilha atualizada via background.");
+            } catch (error) {
+                console.error("Erro ao sincronizar com Google Sheets", error);
+            }
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            initializeCloud();
-        });
+        window.syncGoogleSheets = function() {
+            const gsUrl = localStorage.getItem('miqueias_gs_url');
+            if (!gsUrl) {
+                window.showMessage("Banco de Dados", "Para fazer backup online e sincronizar, adicione a URL da sua Planilha do Google na área de Configurações (⚙️).");
+                return;
+            }
+            window.showMessage("Sincronização", "O sistema web envia os dados automaticamente em segundo plano para sua planilha.");
+            document.getElementById('modal-icon').innerText = "🔄";
+        }
 
-        // ==========================================
-        // FUNÇÕES DA INTERFACE
-        // ==========================================
+        // -----------------------------------------
+        // SISTEMA DE AUTENTICAÇÃO
+        // -----------------------------------------
+        window.openSettings = function() {
+            if(isAuthenticated) {
+                window.switchView('view-settings');
+            } else {
+                actionAfterLogin = 'view-settings';
+                window.switchView('view-login');
+            }
+        }
+
+        window.handleLogin = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+
+            if(email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+                isAuthenticated = true;
+                document.getElementById('login-email').value = "";
+                document.getElementById('login-pass').value = "";
+                
+                if(actionAfterLogin === 'delete_item' && itemToDelete) {
+                    executeDelete(itemToDelete);
+                    window.switchView('view-home');
+                } else if(actionAfterLogin) {
+                    window.switchView(actionAfterLogin);
+                }
+            } else {
+                window.showMessage("Acesso Negado", "E-mail ou senha incorretos.");
+                document.getElementById('modal-icon').innerText = "❌";
+            }
+        }
+
+        // -----------------------------------------
+        // FUNÇÕES DE UI / CORE
+        // -----------------------------------------
         window.switchView = function(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
@@ -504,9 +625,14 @@
 
         window.closeModal = function() {
             document.getElementById('custom-modal').classList.add('hidden');
+            document.getElementById('modal-icon').innerText = "⚠️";
         }
 
         window.cancelRegistration = function() {
+            document.getElementById('confirm-icon').innerText = "❓";
+            document.getElementById('confirm-title').innerText = "Cancelar Registo";
+            document.getElementById('confirm-text').innerText = "Deseja cancelar este registo? Nada será guardado.";
+            document.getElementById('btn-confirm-yes').onclick = () => window.closeConfirmModal(true);
             document.getElementById('confirm-modal').classList.remove('hidden');
         }
 
@@ -519,10 +645,10 @@
             isSilent = !isSilent;
             const btn = document.getElementById('btn-sound');
             if(isSilent) {
-                btn.innerText = "🔇 Som: OFF";
+                btn.innerText = "🔇";
                 btn.classList.replace('text-gray-300', 'text-red-400');
             } else {
-                btn.innerText = "🔊 Som: ON";
+                btn.innerText = "🔊";
                 btn.classList.replace('text-red-400', 'text-gray-300');
             }
         }
@@ -579,10 +705,8 @@
             window.switchView('view-form');
         }
 
-        // ==========================================
-        // GUARDAR DADOS NA SUA NUVEM
-        // ==========================================
-        window.saveAndSend = async function(e) {
+        // GUARDAR DADOS 
+        window.saveAndSend = function(e) {
             e.preventDefault();
             const btnSubmit = document.getElementById('btn-submit-form');
             btnSubmit.innerText = "⏳ A Guardar...";
@@ -593,6 +717,7 @@
             const timeStr = `${min}min ${sec}seg`;
 
             const dataToSave = {
+                id: "id_" + Date.now().toString(),
                 timestamp: Date.now(),
                 date: document.getElementById('f-date').value,
                 time: document.getElementById('f-time').value,
@@ -608,26 +733,16 @@
                 notes: document.getElementById('f-notes').value || 'Nenhuma'
             };
 
-            if (currentUser && db) {
-                try {
-                    const crisesRef = collection(db, 'crises_history');
-                    await addDoc(crisesRef, dataToSave);
-                } catch(error) {
-                    console.error("Erro ao guardar na nuvem:", error);
-                    window.showMessage("Erro de Permissão ou Conexão", "Não foi possível guardar na nuvem. Verifique a internet ou as Regras de Segurança no painel do Firebase.");
-                    btnSubmit.innerText = "👉 GUARDAR E ENVIAR RESPONSÁVEL";
-                    btnSubmit.disabled = false;
-                    return;
-                }
-            } else {
-                // Guarda offline se a net falhar
-                dataToSave.id = Date.now().toString();
-                window.globalCrises.unshift(dataToSave);
-                localStorage.setItem('crises_miqueias_v2', JSON.stringify(window.globalCrises));
-                renderHistoryAndStats();
-            }
+            // Salva na memória do Dispositivo (Funciona Offline e Online)
+            window.globalCrises.unshift(dataToSave);
+            localStorage.setItem('miqueias_crises_db', JSON.stringify(window.globalCrises));
+            
+            // Envia para o Google Planilhas no fundo
+            sendToGoogleSheets("add", dataToSave);
 
-            btnSubmit.innerText = "👉 GUARDAR E ENVIAR RESPONSÁVEL";
+            renderHistoryAndStats();
+
+            btnSubmit.innerText = "👉 GUARDAR REGISTO E ENVIAR";
             btnSubmit.disabled = false;
             window.switchView('view-home');
 
@@ -638,9 +753,7 @@
             window.open(url, '_blank');
         }
 
-        // ==========================================
         // RENDERIZAR ESTATÍSTICAS E LISTA
-        // ==========================================
         function renderHistoryAndStats() {
             const history = window.globalCrises;
             const now = new Date();
@@ -668,23 +781,58 @@
                 return;
             }
 
-            listContainer.innerHTML = history.slice(0, 10).map(item => {
+            listContainer.innerHTML = history.slice(0, 20).map(item => {
                 const dateBR = item.date.split('-').reverse().join('/');
                 return `
-                <div class="bg-slate-900 p-4 rounded-xl border-l-4 border-slate-600 shadow-sm flex flex-col gap-1">
-                    <div class="flex justify-between items-start">
+                <div class="bg-slate-900 p-4 rounded-xl border-l-4 border-slate-600 shadow-sm flex flex-col gap-1 relative">
+                    <button onclick="window.requestDelete('${item.id}')" class="absolute top-2 right-2 text-slate-500 hover:text-red-500 bg-slate-800 rounded px-2 py-1 text-xs">🗑️ Excluir</button>
+                    <div class="flex justify-between items-start pr-16">
                         <p class="font-bold text-white text-sm">${dateBR} às ${item.time}</p>
-                        <span class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded">${item.duration}</span>
                     </div>
-                    <p class="text-sm text-slate-300">Tipo: <span class="font-bold text-yellow-500">${item.type}</span></p>
+                    <span class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded w-max mt-1">${item.duration}</span>
+                    <p class="text-sm text-slate-300 mt-1">Tipo: <span class="font-bold text-yellow-500">${item.type}</span></p>
                     <p class="text-xs text-slate-500 truncate">Obs: ${item.notes}</p>
                 </div>`;
             }).join('');
         }
 
-        // ==========================================
+        // SISTEMA DE EXCLUSÃO DE REGISTOS
+        window.requestDelete = function(id) {
+            itemToDelete = id;
+            if(isAuthenticated) {
+                // Já autenticado na sessão, mostrar confirmação direta
+                document.getElementById('confirm-icon').innerText = "🗑️";
+                document.getElementById('confirm-title').innerText = "Excluir Registo";
+                document.getElementById('confirm-text').innerText = "Tem certeza que deseja apagar permanentemente este registo?";
+                document.getElementById('btn-confirm-yes').onclick = () => {
+                    executeDelete(itemToDelete);
+                    document.getElementById('confirm-modal').classList.add('hidden');
+                };
+                document.getElementById('confirm-modal').classList.remove('hidden');
+            } else {
+                // Pedir credenciais
+                actionAfterLogin = 'delete_item';
+                window.switchView('view-login');
+            }
+        }
+
+        function executeDelete(id) {
+            // Remove do array local
+            window.globalCrises = window.globalCrises.filter(item => item.id !== id);
+            localStorage.setItem('miqueias_crises_db', JSON.stringify(window.globalCrises));
+            
+            // Renderiza
+            renderHistoryAndStats();
+            
+            // Envia comando de delete para a Planilha do Google
+            sendToGoogleSheets("delete", { id: id });
+            
+            window.showMessage("Excluído", "O registo foi apagado do banco de dados com sucesso.");
+            document.getElementById('modal-icon').innerText = "🗑️";
+            itemToDelete = null;
+        }
+
         // SISTEMA DE IMPRESSÃO
-        // ==========================================
         window.openPrintView = function() {
             const history = window.globalCrises;
             const listContainer = document.getElementById('print-selection-list');
@@ -694,10 +842,9 @@
             } else {
                 listContainer.innerHTML = history.map(item => {
                     const dateBR = item.date.split('-').reverse().join('/');
-                    const uniqueId = item.id || item.timestamp; 
                     return `
                     <label class="flex items-start gap-4 cursor-pointer bg-slate-700 hover:bg-slate-600 p-4 rounded-xl border border-slate-600 transition-colors">
-                        <input type="checkbox" class="print-cb w-6 h-6 mt-1 accent-blue-500" value="${uniqueId}">
+                        <input type="checkbox" class="print-cb w-6 h-6 mt-1 accent-blue-500" value="${item.id}">
                         <div class="flex-1">
                             <div class="flex justify-between items-start">
                                 <p class="font-bold text-white">${dateBR} às ${item.time}</p>
@@ -728,10 +875,7 @@
             const selectedIds = Array.from(selectedCheckboxes).map(cb => String(cb.value));
             const history = window.globalCrises;
             
-            const recordsToPrint = history.filter(item => {
-                const uniqueId = item.id ? String(item.id) : String(item.timestamp);
-                return selectedIds.includes(uniqueId);
-            });
+            const recordsToPrint = history.filter(item => selectedIds.includes(String(item.id)));
             
             const printHtml = recordsToPrint.map(data => {
                 const dateBR = data.date.split('-').reverse().join('/');
@@ -753,5 +897,44 @@
             window.print();
         }
     </script>
+    
+    <!-- 
+    ========================================================
+    INSTRUÇÕES PARA ATIVAR O BANCO DE DADOS GOOGLE PLANILHAS
+    ========================================================
+    Como o Javascript não pode fazer "Login" no Google de forma invisível, siga este passo a passo para criar sua "API" na Planilha:
+
+    1. Crie uma nova Planilha no seu Google Drive da conta sosmiqueias@gmail.com
+    2. Na Planilha, clique em "Extensões" -> "Apps Script"
+    3. Apague tudo o que estiver escrito lá e cole o seguinte código:
+
+    function doPost(e) {
+      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+      var req = JSON.parse(e.postData.contents);
+      var data = req.data;
+
+      if(req.action === 'add') {
+         sheet.appendRow([data.id, data.date, data.time, data.duration, data.type, data.before, data.fever, data.infection, data.food, data.pa, data.spo2, data.bpm, data.notes]);
+         return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
+      } else if(req.action === 'delete') {
+         var dataRange = sheet.getDataRange();
+         var values = dataRange.getValues();
+         for (var i = 0; i < values.length; i++) {
+            if (values[i][0] == data.id) {
+               sheet.deleteRow(i + 1);
+               break;
+            }
+         }
+         return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
+    4. Clique em "Implantar" (botão azul no canto superior direito) -> "Nova implantação".
+    5. Escolha o tipo "App da Web" (engrenagem no lado esquerdo).
+    6. Em "Quem pode acessar", coloque "Qualquer pessoa".
+    7. Clique em "Implantar", autorize o acesso (em Advanced / Ir para o projeto) e copie a URL do Web App gerada.
+    8. Abra o seu aplicativo web (este HTML), clique na engrenagem (⚙️ Configurações) com a senha.
+    9. Cole a URL copiada na área de Banco de Dados e pronto! Todos os seus dados estarão seguros na sua planilha.
+    -->
 </body>
 </html>
